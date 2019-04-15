@@ -1,6 +1,6 @@
 <?php
 
-namespace FabbDev\PatternLab\LineageExporter;
+namespace FabbDev\PatternLab\PatternDataExporter;
 
 use PatternLab\Config;
 use PatternLab\Listener;
@@ -16,7 +16,7 @@ class PatternLabListener extends Listener {
   /**
    * The plugin's name in the Pattern Lab configuration and composer.json.
    */
-  const PLUGIN_NAME = 'lineageExporter';
+  const PLUGIN_NAME = 'patternDataExporter';
 
   /**
    * Create the listener and subscribe it to the generate styleguide end event.
@@ -24,13 +24,13 @@ class PatternLabListener extends Listener {
    * This is the same event used to generate patternlab-data.json.
    */
   public function __construct() {
-    $this->addListener('patternData.lineageHelperEnd', 'exportLineage');
+    $this->addListener('builder.generateStyleguideEnd', 'exportData');
   }
 
   /**
-   * Export the lineage data.
+   * Export the pattern data.
    */
-  public function exportLineage() {
+  public function exportData() {
     if (!$this->getConfig('enabled')) {
       return;
     }
@@ -41,7 +41,7 @@ class PatternLabListener extends Listener {
       $dataDir = Config::getOption('publicDir') . '/styleguide/data';
     }
 
-    $data = $this->getLineageData();
+    $data = $this->getData();
 
     $encoded = json_encode($data);
     if (false === $encoded) {
@@ -49,19 +49,31 @@ class PatternLabListener extends Listener {
       return;
     }
 
-    $path = $dataDir . '/patternlab-lineage.json';
+    $path = $dataDir . '/patternlab-pattern-data.json';
     $return = file_put_contents($path, $encoded);
     if (false === $return) {
       error_log(__CLASS__ . ": Error writing $path");
     }
   }
 
-  protected function getLineageData() {
-    // The lineage data should be stored in the option data.
-    // @see \PatternLab\PatternData\Helpers\LineageHelper::run()
-
+  /**
+   * Get the filtered pattern data.
+   *
+   * @return array
+   *   The filtered data.
+   */
+  protected function getData() {
     $data = PatternData::get();
-    return [];
+
+    $categories = $this->getConfig('categories');
+    $subset = array_filter($data, function ($item) use ($categories) {
+      return in_array($item['category'], $categories);
+    });
+
+    $allowed_keys = array_flip($this->getConfig('fields'));
+    return array_map(function (array $pattern) use ($allowed_keys) {
+      return array_intersect_key($pattern, $allowed_keys);
+    }, $subset);
   }
 
   /**
@@ -70,7 +82,7 @@ class PatternLabListener extends Listener {
    * @param string $name
    *   The name of the config option in dotted form, eg. 'enabled', 'us.title'.
    *
-   * @return string|false
+   * @return mixed|false
    *   The configuration value, or false if it wasn't found.
    */
   protected function getConfig($name) {

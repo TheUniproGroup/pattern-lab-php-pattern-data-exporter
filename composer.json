@@ -1,6 +1,6 @@
 {
-    "name": "fabb-dev/pattern-lab-php-lineage-exporter",
-    "description": "Exports the pattern lineage data to a file.",
+    "name": "fabb-dev/pattern-lab-php-pattern-data-exporter",
+    "description": "Exports pattern data to a file.",
     "type": "patternlab-plugin",
     "authors": [
         {
@@ -10,7 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "FabbDev\\PatternLab\\LineageExporter\\": "src/"
+            "FabbDev\\PatternLab\\PatternDataExporter\\": "src/"
         }
     },
     "require": {
@@ -24,8 +24,20 @@
         "patternlab": {
             "config": {
                 "plugins": {
-                    "lineageExporter": {
-                        "enabled": true
+                    "patternDataExporter": {
+                        "enabled": true,
+                        "categories": [
+                            "pattern"
+                        ],
+                        "fields": [
+                            "name",
+                            "type",
+                            "ext",
+                            "path",
+                            "pathName",
+                            "lineages",
+                            "lineagesR"
+                        ]
                     }
                 }
             }
