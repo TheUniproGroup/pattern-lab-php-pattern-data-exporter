@@ -1,5 +1,5 @@
 {
-    "name": "fabb-dev/pattern-lab-php-pattern-data-exporter",
+    "name": "the-unipro-group/pattern-lab-php-pattern-data-exporter",
     "description": "Exports pattern data to a file.",
     "type": "patternlab-plugin",
     "authors": [
@@ -10,7 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "FabbDev\\PatternLab\\PatternDataExporter\\": "src/"
+            "TheUniproGroup\\PatternLab\\PatternDataExporter\\": "src/"
         }
     },
     "require": {

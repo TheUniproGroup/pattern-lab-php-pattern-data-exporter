@@ -1,6 +1,6 @@
 <?php
 
-namespace FabbDev\PatternLab\PatternDataExporter;
+namespace TheUniproGroup\PatternLab\PatternDataExporter;
 
 use PatternLab\Config;
 use PatternLab\Listener;

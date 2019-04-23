@@ -7,7 +7,7 @@ The pattern data exporter plugin exports selected pattern data.
 To add the plugin to your project using [Composer](https://getcomposer.org/)
 type:
 
-    composer require fabb-dev/pattern-lab-php-pattern-data-exporter
+    composer require the-unipro-group/pattern-lab-php-pattern-data-exporter
 
 ## Usage
 
@@ -31,3 +31,7 @@ To disable the plugin you can either directly edit `./config/config.yml` or use
 the command line option:
 
     php core/console --config --set plugins.patternDataExporter.enabled=false
+
+## Todo
+
+1. Publish on packagist when we've confirmed the vendor name.
