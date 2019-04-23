@@ -63,17 +63,33 @@ class PatternLabListener extends Listener {
    *   The filtered data.
    */
   protected function getData() {
+    // Get all the data.
     $data = PatternData::get();
 
+    // Filter by category if appropriate.
     $categories = $this->getConfig('categories');
-    $subset = array_filter($data, function ($item) use ($categories) {
-      return in_array($item['category'], $categories);
-    });
+    if ($categories) {
+      $subset = array_filter($data, function ($item) use ($categories) {
+        return in_array($item['category'], $categories);
+      });
+    }
+    else {
+      // Don't filter anything.
+      $subset = $data;
+    }
 
-    $allowed_keys = array_flip($this->getConfig('fields'));
-    return array_map(function (array $pattern) use ($allowed_keys) {
-      return array_intersect_key($pattern, $allowed_keys);
-    }, $subset);
+    // Filter the resulting fields if appropriate.
+    $fields = $this->getConfig('fields') ?: [];
+    if ($fields) {
+      $allowed_keys = array_flip($fields);
+      return array_map(function (array $pattern) use ($allowed_keys) {
+        return array_intersect_key($pattern, $allowed_keys);
+      }, $subset);
+    }
+    else {
+      // Don't filter anything.
+      return $subset;
+    }
   }
 
   /**
