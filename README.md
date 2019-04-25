@@ -31,7 +31,3 @@ To disable the plugin you can either directly edit `./config/config.yml` or use
 the command line option:
 
     php core/console --config --set plugins.patternDataExporter.enabled=false
-
-## Todo
-
-1. Publish on packagist when we've confirmed the vendor name.
